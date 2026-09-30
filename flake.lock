@@ -1,0 +1,64 @@
+{
+  "nodes": {
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1790533781,
+        "narHash": "sha256-F+b8u43BVF5DlM0pz7JQSbtbwKy5PrHIT5zQUekXsD0=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "cf5e76507c6e23b59f7e0ffcc7baa2a39ddd8442",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-26.05",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "qmk_firmware": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1790453542,
+        "narHash": "sha256-r0mTiN5MgJM7KAcF5UE3Uuai80XjloeBigSJ7dV71UE=",
+        "ref": "refs/heads/master",
+        "rev": "b1aea2556040c28d58d611c8aef0082b5780bb6d",
+        "revCount": 29682,
+        "submodules": true,
+        "type": "git",
+        "url": "https://github.com/qmk/qmk_firmware.git"
+      },
+      "original": {
+        "submodules": true,
+        "type": "git",
+        "url": "https://github.com/qmk/qmk_firmware.git"
+      }
+    },
+    "qmkfmt": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1742470119,
+        "narHash": "sha256-QWyMH93a07/0CJ5CENiwVB4C4w1agowW+esW9Wx5vJk=",
+        "owner": "rcorre",
+        "repo": "qmkfmt",
+        "rev": "caf37d554841fb550cf38368850b3bc4a9836290",
+        "type": "github"
+      },
+      "original": {
+        "owner": "rcorre",
+        "ref": "v0.2.0",
+        "repo": "qmkfmt",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "nixpkgs": "nixpkgs",
+        "qmk_firmware": "qmk_firmware",
+        "qmkfmt": "qmkfmt"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
