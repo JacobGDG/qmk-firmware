@@ -13,92 +13,101 @@
       url = "github:rcorre/qmkfmt?ref=v0.2.0";
       flake = false;
     };
+    flake-utils.url = "github:numtide/flake-utils";
   };
 
   outputs =
     {
       self,
       nixpkgs,
+      flake-utils,
       qmkfmt,
       qmk_firmware,
     }:
-    let
-      keyboards = [
+    flake-utils.lib.eachSystem
+      [
+        "x86_64-linux"
+        "aarch64-darwin"
+      ]
+      (
+        system:
+        let
+          keyboards = [
+            {
+              keyboard = "crkbd/rev4_1/standard";
+              name = "default";
+              rules = ./keyboards/crkbd/rules.mk;
+              config = ./keyboards/crkbd/config.h;
+              keymap = ./keyboards/crkbd/keymap.c;
+            }
+          ];
+          pkgs = import nixpkgs {
+            inherit system;
+          };
+          qmkfmtPkg = pkgs.rustPlatform.buildRustPackage {
+            pname = "qmkfmt";
+            version = "v0.2.0";
+            src = qmkfmt;
+            cargoHash = "sha256-jSrGrYCJxqgp7GvcWZPGriJ5hw+Qfm9K/Po3Ay6WyzI=";
+            doCheck = false;
+          };
+          flash = pkgs.writeShellScriptBin "flash" ''
+            set -e
+
+            FIRMWARE_PATH="$1"
+            if [ -z "$FIRMWARE_PATH" ]; then
+              echo "Usage: flash <path_to_firmware.hex>"
+              exit 1
+            fi
+
+            QMK_HOME=${qmk_firmware} ${pkgs.qmk}/bin/qmk --config-file /dev/null flash "$FIRMWARE_PATH"
+          '';
+          firmware = pkgs.stdenv.mkDerivation {
+            pname = "qmk_firmware";
+            version = "v1.0";
+            src = qmk_firmware;
+            nativeBuildInputs = [
+              pkgs.gnumake
+              pkgs.qmk
+            ];
+            patchPhase = builtins.concatStringsSep "\n" (
+              map (k: ''
+                mkdir -p keyboards/${k.keyboard}/keymaps/${k.name}
+                cp ${k.rules} keyboards/${k.keyboard}/keymaps/${k.name}/rules.mk
+                cp ${k.config} keyboards/${k.keyboard}/keymaps/${k.name}/config.h
+                cp ${k.keymap} keyboards/${k.keyboard}/keymaps/${k.name}/keymap.c
+              '') keyboards
+            ) + ''
+              patchShebangs util/
+            '';
+            buildPhase = builtins.concatStringsSep "\n" (
+              map (k: ''
+                SKIP_GIT=true make -r -R -f builddefs/build_keyboard.mk -s KEYBOARD=${k.keyboard} KEYMAP=${k.name} TARGET=${k.name} VERBOSE=false COLOR=true SILENT=false
+              '') keyboards
+            );
+            installPhase = ''
+              mkdir -p $out/firmware
+              mkdir -p $out/bin
+              shopt -s nullglob
+              cp -r .build/*.{hex,uf2,bin} $out/firmware/
+              cp ${flash}/bin/flash $out/bin
+              cp -ar ${qmk_firmware} $out/bin
+            '';
+          };
+        in
         {
-          keyboard = "crkbd/rev4_1/standard";
-          name = "default";
-          rules = ./keyboards/crkbd/rules.mk;
-          config = ./keyboards/crkbd/config.h;
-          keymap = ./keyboards/crkbd/keymap.c;
+          packages = {
+            firmware = firmware;
+            default = firmware;
+          };
+          devShells.default = pkgs.mkShell {
+            buildInputs = [
+              qmkfmtPkg
+              pkgs.qmk
+              pkgs.ccls
+              pkgs.clang-tools
+            ];
+          };
         }
-      ];
-      pkgs = import nixpkgs {
-        system = "x86_64-linux";
-      };
-      qmkfmtPkg = pkgs.rustPlatform.buildRustPackage {
-        pname = "qmkfmt";
-        version = "v0.2.0";
-        src = qmkfmt;
-        cargoHash = "sha256-jSrGrYCJxqgp7GvcWZPGriJ5hw+Qfm9K/Po3Ay6WyzI=";
-        doCheck = false;
-      };
-      flash = pkgs.writeShellScriptBin "flash" ''
-        set -e
-
-        FIRMWARE_PATH="$1"
-        if [ -z "$FIRMWARE_PATH" ]; then
-          echo "Usage: flash <path_to_firmware.hex>"
-          exit 1
-        fi
-
-        QMK_HOME=${qmk_firmware} ${pkgs.qmk}/bin/qmk --config-file /dev/null flash "$FIRMWARE_PATH"
-      '';
-      firmware = pkgs.stdenv.mkDerivation {
-        pname = "qmk_firmware";
-        version = "v1.0";
-        src = qmk_firmware;
-        nativeBuildInputs = [
-          pkgs.gnumake
-          pkgs.qmk
-        ];
-        patchPhase = builtins.concatStringsSep "\n" (
-          map (k: ''
-            mkdir -p keyboards/${k.keyboard}/keymaps/${k.name}
-            cp ${k.rules} keyboards/${k.keyboard}/keymaps/${k.name}/rules.mk
-            cp ${k.config} keyboards/${k.keyboard}/keymaps/${k.name}/config.h
-            cp ${k.keymap} keyboards/${k.keyboard}/keymaps/${k.name}/keymap.c
-          '') keyboards
-        ) + ''
-          patchShebangs util/
-        '';
-        buildPhase = builtins.concatStringsSep "\n" (
-          map (k: ''
-            SKIP_GIT=true make -r -R -f builddefs/build_keyboard.mk -s KEYBOARD=${k.keyboard} KEYMAP=${k.name} TARGET=${k.name} VERBOSE=false COLOR=true SILENT=false
-          '') keyboards
-        );
-        installPhase = ''
-          mkdir -p $out/firmware
-          mkdir -p $out/bin
-          shopt -s nullglob
-          cp -r .build/*.{hex,uf2,bin} $out/firmware/
-          cp ${flash}/bin/flash $out/bin
-          cp -ar ${qmk_firmware} $out/bin
-        '';
-      };
-    in
-    {
-
-      packages.x86_64-linux.firmware = firmware;
-      packages.x86_64-linux.default = firmware;
-
-      devShells.x86_64-linux.default = nixpkgs.legacyPackages.x86_64-linux.mkShell {
-        buildInputs = [
-          qmkfmtPkg
-          pkgs.qmk
-          pkgs.ccls
-          pkgs.clang-tools
-        ];
-      };
-
-    };
+      );
 }
