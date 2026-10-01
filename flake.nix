@@ -82,7 +82,7 @@
             '';
             buildPhase = builtins.concatStringsSep "\n" (
               map (k: ''
-                SKIP_GIT=true make -r -R -f builddefs/build_keyboard.mk -s KEYBOARD=${k.keyboard} KEYMAP=${k.name} TARGET=${k.name} VERBOSE=false COLOR=true SILENT=false
+                SKIP_GIT=true make -r -R -j$NIX_BUILD_CORES -f builddefs/build_keyboard.mk -s KEYBOARD=${k.keyboard} KEYMAP=${k.name} TARGET=${k.name} VERBOSE=false COLOR=true SILENT=false
               '') keyboards
             );
             installPhase = ''
@@ -91,7 +91,6 @@
               shopt -s nullglob
               cp -r .build/*.{hex,uf2,bin} $out/firmware/
               cp ${flash}/bin/flash $out/bin
-              cp -ar ${qmk_firmware} $out/bin
             '';
           };
         in
