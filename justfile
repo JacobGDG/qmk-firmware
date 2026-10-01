@@ -13,8 +13,8 @@ build:
     fi
 
 flash: build
-    test -f result/firmware/default.uf2 || just build
-    qmk --config-file /dev/null flash result/firmware/default.uf2
+    test -f result/default.uf2 || just build
+    qmk --config-file /dev/null flash result/default.uf2
 
 format:
     qmkfmt keyboards/crkbd/keymap.c

@@ -75,9 +75,9 @@
               '') keyboards
             );
             installPhase = ''
-              mkdir -p $out/firmware
+              mkdir -p $out
               shopt -s nullglob
-              cp -r .build/*.{hex,uf2,bin} $out/firmware/
+              cp -r .build/*.{hex,uf2,bin} $out/
             '';
           };
         in
