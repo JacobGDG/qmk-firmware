@@ -51,17 +51,6 @@
             cargoHash = "sha256-jSrGrYCJxqgp7GvcWZPGriJ5hw+Qfm9K/Po3Ay6WyzI=";
             doCheck = false;
           };
-          flash = pkgs.writeShellScriptBin "flash" ''
-            set -e
-
-            FIRMWARE_PATH="$1"
-            if [ -z "$FIRMWARE_PATH" ]; then
-              echo "Usage: flash <path_to_firmware.hex>"
-              exit 1
-            fi
-
-            QMK_HOME=${qmk_firmware} ${pkgs.qmk}/bin/qmk --config-file /dev/null flash "$FIRMWARE_PATH"
-          '';
           firmware = pkgs.stdenv.mkDerivation {
             pname = "qmk_firmware";
             version = "v1.0";
@@ -87,10 +76,8 @@
             );
             installPhase = ''
               mkdir -p $out/firmware
-              mkdir -p $out/bin
               shopt -s nullglob
               cp -r .build/*.{hex,uf2,bin} $out/firmware/
-              cp ${flash}/bin/flash $out/bin
             '';
           };
         in
@@ -106,6 +93,7 @@
               pkgs.ccls
               pkgs.clang-tools
             ];
+            QMK_HOME = "${qmk_firmware}";
           };
         }
       );

@@ -14,7 +14,7 @@ build:
 
 flash: build
     test -f result/firmware/default.uf2 || just build
-    result/bin/flash result/firmware/default.uf2
+    qmk --config-file /dev/null flash result/firmware/default.uf2
 
 format:
     qmkfmt keyboards/crkbd/keymap.c
