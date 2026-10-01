@@ -12,7 +12,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case VIM_SAVE:
             if (record->event.pressed) {
-                SEND_STRING(":w\n");
+                SEND_STRING(SS_TAP(X_ESCAPE) ":w\n");
             }
             return false;
     }
@@ -28,7 +28,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LSFT,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH,  KC_ESC,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                            MT(MOD_LGUI, KC_ESC),   MO(1),  KC_SPC,     KC_ENT,   MO(2), KC_LSFT
+                            KC_LGUI,    LT(1, KC_ESC),  KC_SPC,     KC_ENT,   MO(2), KC_LSFT
                                       //`--------------------------'  `--------------------------'
   ),
 
