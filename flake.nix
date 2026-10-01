@@ -10,7 +10,7 @@
       submodules = true;
     };
     qmkfmt = {
-      url = "github:rcorre/qmkfmt?ref=v0.2.0";
+      url = "github:rcorre/qmkfmt?ref=v0.3.0";
       flake = false;
     };
     flake-utils.url = "github:numtide/flake-utils";
@@ -46,9 +46,9 @@
           };
           qmkfmtPkg = pkgs.rustPlatform.buildRustPackage {
             pname = "qmkfmt";
-            version = "v0.2.0";
+            version = "v0.3.0";
             src = qmkfmt;
-            cargoHash = "sha256-jSrGrYCJxqgp7GvcWZPGriJ5hw+Qfm9K/Po3Ay6WyzI=";
+            cargoHash = "sha256-+0tFSSZR5tBUC0WbJ1Oc3b6n5q3JkaeMnL9bzL6B3zo=";
             doCheck = false;
           };
           firmware = pkgs.stdenv.mkDerivation {
@@ -77,7 +77,7 @@
             installPhase = ''
               mkdir -p $out
               shopt -s nullglob
-              cp -r .build/*.{hex,uf2,bin} $out/
+              cp .build/*.{hex,uf2,bin} $out/
             '';
           };
         in
