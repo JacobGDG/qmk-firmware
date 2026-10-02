@@ -46,9 +46,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [2] = LAYOUT_split_3x6_3_ex2(
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
-       KC_TAB,   KC_GRV, S(KC_COMM),  S(KC_DOT), KC_MINS, UK_PIPE, _______,   _______,  KC_CIRC, KC_LCBR, KC_RCBR,  KC_DLR, VIM_SAVE, KC_BSPC,
+       KC_TAB,   KC_GRV, S(KC_COMM),  S(KC_DOT), KC_MINS, UK_PIPE, UK_PND,   _______,  KC_CIRC, KC_LCBR, KC_RCBR,  KC_DLR, VIM_SAVE, KC_BSPC,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      KC_LCTL,  KC_EXLM,    KC_ASTR,    KC_SLSH,  KC_EQL, KC_AMPR, _______,   _______,   UK_HASH, KC_LPRN, KC_RPRN, KC_SCLN, UK_DQUO, XXXXXXX,
+      KC_LCTL,  KC_EXLM,    KC_ASTR,    KC_SLSH,  KC_EQL, KC_AMPR, UK_BSLS,   _______,   UK_HASH, KC_LPRN, KC_RPRN, KC_SCLN, UK_DQUO, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       KC_LSFT,  UK_TILD,    KC_PLUS,    KC_LBRC, KC_RBRC, KC_PERC,                      UK_AT,   KC_COLN, KC_COMM, KC_DOT,  KC_QUOT, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
