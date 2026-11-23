@@ -19,6 +19,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
+bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case LT(1, KC_ESC):
+            return true;
+        default:
+            return false;
+    }
+}
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT_split_3x6_3_ex2(
        KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T, KC_LALT,        XXXXXXX,   KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,  KC_BSPC,

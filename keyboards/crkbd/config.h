@@ -21,3 +21,6 @@
 #define RGB_MATRIX_DEFAULT_SAT 255 // HSV_ORANGE sat
 #define RGB_MATRIX_DEFAULT_VAL 120 // dimmer than HSV_ORANGE's default 255
 #define RGB_MATRIX_TIMEOUT 300000 // turn off after 5 minutes idle
+
+/* Tap-hold */
+#define HOLD_ON_OTHER_KEY_PRESS_PER_KEY // layer-tap thumb resolves to layer as soon as another key goes down
